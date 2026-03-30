@@ -1,4 +1,4 @@
-# Algo Workspace Companion
+# LeetCode on VSCode
 
 Unofficial VS Code fork for solving LeetCode problems with a faster local workflow.
 
@@ -21,8 +21,8 @@ This extension is an unofficial fork of the open-source `vscode-leetcode` projec
 
 ## Current Identity
 
-- Extension ID: `zhuanz.algo-workspace-companion`
-- Display name: `Algo Workspace Companion`
+- Extension ID: `olsonwangyj.leetcode-on-vscode`
+- Display name: `LeetCode on VSCode`
 - License: MIT
 
 If you want to publish it under your own Marketplace publisher, update the `publisher` field in `package.json` before packaging.

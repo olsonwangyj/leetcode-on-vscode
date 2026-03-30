@@ -1,8 +1,8 @@
 {
-	"name": "algo-workspace-companion",
-	"displayName": "Algo Workspace Companion",
-	"description": "Unofficial VS Code companion for solving LeetCode problems with streamlined testing and workspace tweaks.",
-	"version": "0.18.5",
+	"name": "leetcode-on-vscode",
+	"displayName": "LeetCode on VSCode",
+	"description": "Unofficial VS Code extension for solving LeetCode problems with streamlined testing and workspace tweaks.",
+	"version": "0.18.6",
 	"author": "olsonwangyj",
 	"publisher": "olsonwangyj",
 	"license": "MIT",
@@ -53,81 +53,81 @@
 			{
 				"command": "leetcode.deleteCache",
 				"title": "Delete Cache",
-				"category": "Algo Companion"
+				"category": "LeetCode Companion"
 			},
 			{
 				"command": "leetcode.toggleLeetCodeCn",
 				"title": "Switch Endpoint",
-				"category": "Algo Companion",
+				"category": "LeetCode Companion",
 				"icon": "$(globe)"
 			},
 			{
 				"command": "leetcode.signin",
 				"title": "Sign In",
-				"category": "Algo Companion",
+				"category": "LeetCode Companion",
 				"icon": "$(sign-in)"
 			},
 			{
 				"command": "leetcode.signout",
 				"title": "Sign Out",
-				"category": "Algo Companion"
+				"category": "LeetCode Companion"
 			},
 			{
 				"command": "leetcode.manageSessions",
 				"title": "Manage Sessions",
-				"category": "Algo Companion"
+				"category": "LeetCode Companion"
 			},
 			{
 				"command": "leetcode.refreshExplorer",
 				"title": "Refresh",
-				"category": "Algo Companion",
+				"category": "LeetCode Companion",
 				"icon": "$(refresh)"
 			},
 			{
 				"command": "leetcode.pickOne",
 				"title": "Pick One",
-				"category": "Algo Companion"
+				"category": "LeetCode Companion"
 			},
 			{
 				"command": "leetcode.showProblem",
 				"title": "Show Problem",
-				"category": "Algo Companion"
+				"category": "LeetCode Companion"
 			},
 			{
 				"command": "leetcode.previewProblem",
 				"title": "Preview Problem",
-				"category": "Algo Companion"
+				"category": "LeetCode Companion"
 			},
 			{
 				"command": "leetcode.searchProblem",
 				"title": "Search Problem",
-				"category": "Algo Companion",
+				"category": "LeetCode Companion",
 				"icon": "$(search)"
 			},
 			{
 				"command": "leetcode.showSolution",
 				"title": "Show Top Voted Solution",
-				"category": "Algo Companion"
+				"category": "LeetCode Companion"
 			},
 			{
 				"command": "leetcode.testSolution",
 				"title": "Test in LeetCode",
-				"category": "Algo Companion"
+				"category": "LeetCode Companion"
 			},
 			{
 				"command": "leetcode.testSolutionDirect",
 				"title": "Test in LeetCode (Direct)",
-				"category": "Algo Companion"
+				"category": "LeetCode Companion"
 			},
 			{
 				"command": "leetcode.submitSolution",
 				"title": "Submit to LeetCode",
-				"category": "Algo Companion"
+				"category": "LeetCode Companion"
 			},
 			{
 				"command": "leetcode.addFavorite",
 				"title": "Add to Favorite List",
-				"category": "Algo Companion",
+				"category": "LeetCode Companion",
 				"icon": {
 					"light": "resources/light/like.png",
 					"dark": "resources/dark/like.png"
@@ -136,7 +136,7 @@
 			{
 				"command": "leetcode.removeFavorite",
 				"title": "Remove from Favorite List",
-				"category": "Algo Companion",
+				"category": "LeetCode Companion",
 				"icon": {
 					"light": "resources/light/dislike.png",
 					"dark": "resources/dark/dislike.png"
@@ -145,12 +145,12 @@
 			{
 				"command": "leetcode.switchDefaultLanguage",
 				"title": "Switch Default Language",
-				"category": "Algo Companion"
+				"category": "LeetCode Companion"
 			},
 			{
 				"command": "leetcode.problems.sort",
 				"title": "Sort Problems",
-				"category": "Algo Companion",
+				"category": "LeetCode Companion",
 				"icon": "$(sort-precedence)"
 			}
 		],
@@ -158,7 +158,7 @@
 			"activitybar": [
 				{
 					"id": "leetcode",
-					"title": "Algo",
+					"title": "LeetCode",
 					"icon": "resources/AlgoWorkspace-mono.svg"
 				}
 			]
@@ -297,12 +297,12 @@
 		"submenus": [
 			{
 				"id": "leetcode.editorAction",
-				"label": "Algo Companion"
+				"label": "LeetCode Companion"
 			}
 		],
 		"configuration": [
 			{
-				"title": "Algo Workspace Companion",
+				"title": "LeetCode on VSCode",
 				"properties": {
 					"leetcode.hideSolved": {
 						"type": "boolean",
