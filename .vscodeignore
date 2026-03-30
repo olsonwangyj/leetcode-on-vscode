@@ -1,0 +1,7 @@
+.vsixmanifest
+*.vsix
+_config.yml
+resources/LeetCode.png
+resources/LeetCode.svg
+out/**/*.map
+out/src/temp-extension.js
