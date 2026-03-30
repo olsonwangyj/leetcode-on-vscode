@@ -12,11 +12,11 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/olsonwangyj/leetcodeOnVscode.git"
+		"url": "https://github.com/olsonwangyj/leetcode-on-vscode.git"
 	},
-	"homepage": "https://github.com/olsonwangyj/leetcodeOnVscode#readme",
+	"homepage": "https://github.com/olsonwangyj/leetcode-on-vscode#readme",
 	"bugs": {
-		"url": "https://github.com/olsonwangyj/leetcodeOnVscode/issues"
+		"url": "https://github.com/olsonwangyj/leetcode-on-vscode/issues"
 	},
 	"categories": [
 		"Other",
