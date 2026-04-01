@@ -9,10 +9,10 @@
 - Marketplace item: `https://marketplace.visualstudio.com/items?itemName=olsonwangyj.leetcode-on-vscode`
 - Current repo branch: `main`
 - Current tracked remote: `origin -> git@github.com:olsonwangyj/leetcode-on-vscode.git`
-- Current package version in repo: `1.0.0`
+- Current package version in repo: `1.0.1`
 - Installed local extension path pattern: `/Users/Zhuanz/.vscode/extensions/olsonwangyj.leetcode-on-vscode-*`
 - Current packaged VSIX files in repo:
-  - `leetcode-on-vscode-1.0.0.vsix`
+  - `leetcode-on-vscode-1.0.1.vsix`
 
 ## One-time setup
 
@@ -49,7 +49,7 @@ Keep these two files in sync:
 - `package.json`
 - `package-lock.json`
 
-Current version before the next release: `1.0.0`
+Current version before the next release: `1.0.1`
 
 ### 3. Check local changes
 
@@ -66,7 +66,7 @@ vsce package
 This creates a file like:
 
 ```bash
-leetcode-on-vscode-1.0.0.vsix
+leetcode-on-vscode-1.0.1.vsix
 ```
 
 For the next release, the filename should change with the new version number.

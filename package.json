@@ -1,8 +1,8 @@
 {
 	"name": "leetcode-on-vscode",
 	"displayName": "LeetCode on VSCode",
-	"description": "Stable unofficial VS Code extension for solving LeetCode problems with streamlined testing, submission, and workspace workflows.",
-	"version": "1.0.0",
+	"description": "Solve LeetCode problems in VS Code with faster testing, cleaner submissions, and a focused workspace layout.",
+	"version": "1.0.1",
 	"author": "olsonwangyj",
 	"publisher": "olsonwangyj",
 	"license": "MIT",
@@ -27,7 +27,7 @@
 		"algorithm",
 		"interview",
 		"coding",
-		"unofficial"
+		"vscode"
 	],
 	"activationEvents": [
 		"onCommand:leetcode.toggleLeetCodeCn",
@@ -714,7 +714,7 @@
 						"type": "boolean",
 						"default": false,
 						"scope": "application",
-						"description": "Compatibility telemetry setting. Disabled in this unofficial fork."
+						"description": "Compatibility telemetry setting. Disabled in this release."
 					}
 				}
 			}

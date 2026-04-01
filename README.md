@@ -1,36 +1,59 @@
 # LeetCode on VSCode
 
-Stable unofficial VS Code extension for solving LeetCode problems with a faster local workflow.
+Solve LeetCode problems in VS Code with faster testing, cleaner submissions, and a focused workspace layout.
 
-## Important
+## Features
 
-This extension is an unofficial fork of the open-source `vscode-leetcode` project.
+- Browse, search, and open LeetCode problems directly in VS Code.
+- Keep the problem description on the left and your code on the right.
+- Run tests with a faster direct workflow instead of jumping through extra prompts.
+- Parse multiple examples from the problem description and run them in sequence.
+- Save failed submission cases and replay them in later local tests.
+- Read cleaner grouped submission output with inputs, outputs, and comparisons.
+- Keep the workspace tidy by closing the previous problem tab when it is safe to do so.
+- Automatically collapse the sidebar after opening a problem so you can focus on coding.
 
-- It is not affiliated with or endorsed by LeetCode.
-- It keeps most of the original command IDs and settings for compatibility.
-- It is best used as a replacement for the official extension, not side by side with it.
+## Quick Start
 
-## What This Fork Changes
+1. Install the extension.
+2. Open the LeetCode view in the Activity Bar.
+3. Run `LeetCode: Sign In`.
+4. Open a problem from the explorer.
+5. Write your solution and test locally.
+6. Submit when you are ready.
 
-- Direct test shortcut for faster local iteration.
-- Multi-example testing parsed from the problem description.
-- Saved failed submission cases reused in later tests.
-- More readable submission output formatting.
-- Layout tweaks for opening problems and code side by side.
-- Auto-closing the previous LeetCode code tab when opening the next problem.
-- Auto-collapsing the sidebar after opening a problem while leaving the Activity Bar untouched.
-- Web authorization callback aligned with the published extension id.
+## Recommended Workflow
 
-## Current Identity
+- Open a problem and start coding with the description visible beside your solution file.
+- Use the direct test command to run the available examples quickly.
+- Review grouped results in the submission panel instead of scanning raw output.
+- Submit once the local examples and any saved failed cases look correct.
 
-- Extension ID: `olsonwangyj.leetcode-on-vscode`
-- Display name: `LeetCode on VSCode`
-- Current stable version target: `1.0.0`
-- License: MIT
+## Testing and Submission
 
-If you want to publish it under your own Marketplace publisher, update the `publisher` field in `package.json` before packaging.
+- Testing supports multiple examples extracted from the problem description.
+- Failed cases from previous submissions can be replayed in later test runs.
+- Submission results are formatted into clearer sections for faster debugging.
+- Local `stdout` is preserved when LeetCode returns it, which makes `println`-style debugging easier.
 
-## Packaging
+## Workspace Behavior
+
+- Problem description opens on the left.
+- Code opens on the right.
+- The sidebar collapses after opening a problem.
+- The Activity Bar remains visible.
+- The previous LeetCode code tab is closed automatically when it is safe.
+
+## Commands
+
+- `LeetCode: Sign In`
+- `LeetCode: Show Problem`
+- `LeetCode: Test in LeetCode`
+- `LeetCode: Test in LeetCode (Direct)`
+- `LeetCode: Submit to LeetCode`
+- `LeetCode: Search Problem`
+
+## Local Packaging
 
 From the extension folder:
 
@@ -53,23 +76,4 @@ You can also use the included helper scripts:
 ./scripts/release.sh verify
 ```
 
-## Publish Checklist
-
-- Create your own Visual Studio Marketplace publisher.
-- Update `publisher` in `package.json` to match that publisher ID.
-- Review README wording and support links before publishing publicly.
-- Package the extension into a `.vsix`.
-- Publish with `vsce publish`.
-
-## Notes
-
-- This fork still depends on LeetCode services and your LeetCode account session.
-- Public distribution may still carry service-term or brand-review risk, so review LeetCode's terms and your Marketplace listing copy before publishing.
-
-## Upstream Credit
-
-This fork is based on the MIT-licensed upstream project:
-
-- https://github.com/LeetCode-OpenSource/vscode-leetcode
-
-Please keep the original MIT license and attribution when redistributing.
+More release notes and maintenance steps are documented in [RELEASE.md](./RELEASE.md).
