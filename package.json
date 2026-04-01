@@ -1,12 +1,12 @@
 {
 	"name": "leetcode-on-vscode",
 	"displayName": "LeetCode on VSCode",
-	"description": "Unofficial VS Code extension for solving LeetCode problems with streamlined testing and workspace tweaks.",
-	"version": "0.18.8",
+	"description": "Stable unofficial VS Code extension for solving LeetCode problems with streamlined testing, submission, and workspace workflows.",
+	"version": "1.0.0",
 	"author": "olsonwangyj",
 	"publisher": "olsonwangyj",
 	"license": "MIT",
-	"icon": "resources/AlgoWorkspace.png",
+	"icon": "resources/LeetCodeOnVSCode.png",
 	"engines": {
 		"vscode": "^1.57.0"
 	},
@@ -29,7 +29,6 @@
 		"coding",
 		"unofficial"
 	],
-	"preview": true,
 	"activationEvents": [
 		"onCommand:leetcode.toggleLeetCodeCn",
 		"onCommand:leetcode.signin",
@@ -159,7 +158,7 @@
 				{
 					"id": "leetcode",
 					"title": "LeetCode",
-					"icon": "resources/AlgoWorkspace-mono.svg"
+					"icon": "resources/LeetCodeOnVSCode-mono.svg"
 				}
 			]
 		},

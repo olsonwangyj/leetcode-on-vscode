@@ -3,6 +3,20 @@ All notable changes to the "leetcode" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [1.0.0]
+### Added
+- Added release helper scripts for packaging, publishing, and verification.
+- Added requirement and release documentation for formal release maintenance.
+
+### Changed
+- Promoted the fork to a formal stable release instead of a Marketplace preview release.
+- Switched visible extension icons to the LeetCode-branded asset set.
+- Refactored fork-specific runtime decisions into dedicated helper modules.
+
+### Fixed
+- Fixed web authorization to return to the published extension id.
+- Preserved automatic sidebar collapsing after opening problems in the customized workspace layout.
+
 ## [0.18.4]
 ### Added
 - change graphql path

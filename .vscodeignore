@@ -1,7 +1,14 @@
 .vsixmanifest
 *.vsix
 _config.yml
-resources/LeetCode.png
-resources/LeetCode.svg
+.gitignore
+RELEASE.md
+requirements/**
+scripts/**
+resources/AlgoWorkspace-mono.svg
+resources/AlgoWorkspace.png
+resources/AlgoWorkspace.svg
 out/**/*.map
+out/src/.env.local
+out/src/temp.js
 out/src/temp-extension.js

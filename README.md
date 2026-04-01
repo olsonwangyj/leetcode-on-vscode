@@ -1,6 +1,6 @@
 # LeetCode on VSCode
 
-Unofficial VS Code fork for solving LeetCode problems with a faster local workflow.
+Stable unofficial VS Code extension for solving LeetCode problems with a faster local workflow.
 
 ## Important
 
@@ -18,11 +18,14 @@ This extension is an unofficial fork of the open-source `vscode-leetcode` projec
 - More readable submission output formatting.
 - Layout tweaks for opening problems and code side by side.
 - Auto-closing the previous LeetCode code tab when opening the next problem.
+- Auto-collapsing the sidebar after opening a problem while leaving the Activity Bar untouched.
+- Web authorization callback aligned with the published extension id.
 
 ## Current Identity
 
 - Extension ID: `olsonwangyj.leetcode-on-vscode`
 - Display name: `LeetCode on VSCode`
+- Current stable version target: `1.0.0`
 - License: MIT
 
 If you want to publish it under your own Marketplace publisher, update the `publisher` field in `package.json` before packaging.
@@ -42,11 +45,18 @@ If you already have `vsce` installed globally:
 vsce package
 ```
 
+You can also use the included helper scripts:
+
+```bash
+./scripts/release.sh package
+./scripts/release.sh publish
+./scripts/release.sh verify
+```
+
 ## Publish Checklist
 
 - Create your own Visual Studio Marketplace publisher.
 - Update `publisher` in `package.json` to match that publisher ID.
-- Replace the default fork icon if you want your own branding.
 - Review README wording and support links before publishing publicly.
 - Package the extension into a `.vsix`.
 - Publish with `vsce publish`.

@@ -1,0 +1,28 @@
+@startuml
+left to right direction
+
+actor "End User" as User
+actor "Maintainer" as Maintainer
+actor "LeetCode Web Service" as LeetCode
+actor "VS Code Marketplace" as Marketplace
+
+rectangle "LeetCode on VSCode" {
+  usecase "Sign in through Web Authorization" as UC1
+  usecase "Open Problem with Customized Layout" as UC2
+  usecase "Run Multi-Example Tests" as UC3
+  usecase "Submit Solution and View Results" as UC4
+  usecase "Package and Publish Formal Release" as UC5
+}
+
+User --> UC1
+User --> UC2
+User --> UC3
+User --> UC4
+Maintainer --> UC5
+UC1 --> LeetCode
+UC3 --> LeetCode
+UC4 --> LeetCode
+UC5 --> Marketplace
+
+@enduml
+

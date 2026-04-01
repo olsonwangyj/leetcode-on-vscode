@@ -23,6 +23,7 @@ const leetCodeExecutor_1 = require("../leetCodeExecutor");
 const leetCodeManager_1 = require("../leetCodeManager");
 const shared_1 = require("../shared");
 const problemUtils_1 = require("../utils/problemUtils");
+const problemWorkspaceLayout = require("../utils/problemWorkspaceLayout");
 const settingUtils = require("../utils/settingUtils");
 const uiUtils_1 = require("../utils/uiUtils");
 const workspaceUtils_1 = require("../utils/workspaceUtils");
@@ -193,22 +194,9 @@ function showProblemInternal(node) {
             const descriptionConfig = settingUtils.getDescriptionConfiguration();
             const needTranslation = settingUtils.shouldUseEndpointTranslation();
             yield leetCodeExecutor_1.leetCodeExecutor.showProblem(node, language, finalPath, descriptionConfig.showInComment, needTranslation);
-            if (descriptionConfig.showInWebview) {
-                yield vscode.commands.executeCommand("vscode.setEditorLayout", {
-                    orientation: 0,
-                    groups: [
-                        { size: 0.4 },
-                        { size: 0.6 },
-                    ],
-                });
-                yield showDescriptionView(node);
-            }
-            yield vscode.window.showTextDocument(vscode.Uri.file(finalPath), {
-                preview: false,
-                viewColumn: descriptionConfig.showInWebview ? vscode.ViewColumn.Two : vscode.ViewColumn.One,
-            });
-            yield closeOtherProblemTabs(finalPath, workspaceFolder);
-            yield vscode.commands.executeCommand("workbench.action.closeSidebar");
+            yield problemWorkspaceLayout.prepareProblemPresentation(descriptionConfig.showInWebview, () => showDescriptionView(node));
+            yield problemWorkspaceLayout.openProblemCodeEditor(finalPath, descriptionConfig.showInWebview);
+            yield problemWorkspaceLayout.finishProblemWorkspace(finalPath, workspaceFolder, closeOtherProblemTabs);
             yield uiUtils_1.promptHintMessage("hint.commentDescription", 'You can config how to show the problem description through "leetcode.showDescription".', "Open settings", () => uiUtils_1.openSettingsEditor("leetcode.showDescription"));
         }
         catch (error) {

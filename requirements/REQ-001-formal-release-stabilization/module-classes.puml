@@ -1,0 +1,53 @@
+@startuml
+class ExtensionActivator {
+  +activate(context)
+  +deactivate()
+}
+
+class LeetCodeManager {
+  +signIn()
+  +signOut()
+  +getLoginStatus()
+  +handleUriSignIn(uri)
+  +getAuthLoginUrl()
+}
+
+class LeetCodeExecutor {
+  +meetRequirements(context)
+  +showProblem(problemNode, language, filePath, showDescriptionInComment, needTranslation)
+  +getDescription(problemNodeId, needTranslation)
+  +testSolution(filePath, testString)
+  +submitSolution(filePath)
+}
+
+class ShowCommandFlow {
+  +showProblem(node)
+  +previewProblem(input, isSideMode)
+}
+
+class TestCommandFlow {
+  +testSolution(uri)
+  +testSolutionDirect(uri)
+}
+
+class SubmitCommandFlow {
+  +submitSolution(uri)
+}
+
+class LeetCodeSubmissionProvider {
+  +show(resultString)
+  +parseResult(resultString)
+}
+
+ExtensionActivator --> LeetCodeManager
+ExtensionActivator --> ShowCommandFlow
+ExtensionActivator --> TestCommandFlow
+ExtensionActivator --> SubmitCommandFlow
+LeetCodeManager --> LeetCodeExecutor
+ShowCommandFlow --> LeetCodeExecutor
+TestCommandFlow --> LeetCodeExecutor
+SubmitCommandFlow --> LeetCodeExecutor
+SubmitCommandFlow --> LeetCodeSubmissionProvider
+TestCommandFlow --> LeetCodeSubmissionProvider
+
+@enduml

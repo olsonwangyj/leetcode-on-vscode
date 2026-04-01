@@ -1,0 +1,24 @@
+@startuml
+actor User
+participant "VS Code Command" as Command
+participant "LeetCodeManager" as Manager
+participant "shared.js" as Shared
+participant "Browser" as Browser
+participant "LeetCode Service" as LC
+participant "URI Handler" as Handler
+participant "LeetCodeExecutor" as Executor
+
+User -> Command: Trigger Sign In
+Command -> Manager: signIn()
+Manager -> Shared: getAuthLoginUrl()
+Shared --> Manager: published extension callback URL
+Manager -> Browser: open authorization URL
+Browser -> LC: authenticate user
+LC -> Handler: return URI with cookie
+Handler -> Manager: handleUriSignIn(uri)
+Manager -> Manager: parse cookie
+Manager -> Executor: update CLI session
+Manager --> User: signed-in status updated
+
+@enduml
+

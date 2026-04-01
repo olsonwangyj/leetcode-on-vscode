@@ -1,0 +1,35 @@
+@startuml
+skinparam componentStyle rectangle
+
+actor "End User" as User
+actor "Maintainer" as Maintainer
+
+rectangle "VS Code Runtime" {
+  component "extension.js\nCommand Registration" as Ext
+  component "LeetCodeManager\nAuth Orchestration" as Manager
+  component "LeetCodeExecutor\nCLI Boundary" as Executor
+  component "show.js\nWorkspace UX Flow" as Show
+  component "test.js\nEnhanced Test Flow" as Test
+  component "submit.js\nSubmission Flow" as Submit
+  component "LeetCodeSubmissionProvider\nResult Rendering" as Webview
+}
+
+cloud "LeetCode Service" as LC
+cloud "VS Code Marketplace" as MP
+
+User --> Ext
+Maintainer --> MP
+Ext --> Manager
+Ext --> Show
+Ext --> Test
+Ext --> Submit
+Manager --> Executor
+Show --> Executor
+Test --> Executor
+Submit --> Executor
+Submit --> Webview
+Test --> Webview
+Executor --> LC
+
+@enduml
+

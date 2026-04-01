@@ -1,0 +1,11 @@
+@startuml
+start
+:Audit repository state and release-critical flows;
+:Confirm requirement scope for formal release;
+:Create or update release-critical code and docs;
+:Increment version in package metadata;
+:Package VSIX locally;
+:Publish to Marketplace;
+:Verify published version and repository sync;
+stop
+@enduml

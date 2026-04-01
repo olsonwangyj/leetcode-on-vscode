@@ -4,6 +4,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUrl = exports.urlsCn = exports.urls = exports.PREMIUM_URL_GLOBAL = exports.PREMIUM_URL_CN = exports.SortingStrategy = exports.leetcodeHasInited = exports.DescriptionConfiguration = exports.supportedPlugins = exports.Category = exports.defaultProblem = exports.Endpoint = exports.ProblemState = exports.langExt = exports.languages = exports.loginArgsMapping = exports.UserStatus = void 0;
 const vscode = require("vscode");
+const forkConfig = require("./utils/forkConfig");
 var UserStatus;
 (function (UserStatus) {
     UserStatus[UserStatus["SignedIn"] = 1] = "SignedIn";
@@ -104,14 +105,13 @@ var SortingStrategy;
 exports.PREMIUM_URL_CN = "https://leetcode.cn/premium-payment/?source=vscode";
 exports.PREMIUM_URL_GLOBAL = "https://leetcode.com/subscribe/?ref=lp_pl&source=vscode";
 const protocol = vscode.env.appName.includes('Insiders') ? "vscode-insiders" : "vscode";
-const extensionId = "olsonwangyj.leetcode-on-vscode";
 exports.urls = {
     // base urls
     base: "https://leetcode.com",
     graphql: "https://leetcode.com/graphql",
     userGraphql: "https://leetcode.com/graphql",
     login: "https://leetcode.com/accounts/login/",
-    authLoginUrl: `https://leetcode.com/authorize-login/${protocol}/?path=${extensionId}`,
+    authLoginUrl: `https://leetcode.com/authorize-login/${protocol}/?path=${forkConfig.getPublishedExtensionId()}`,
 };
 exports.urlsCn = {
     // base urls
@@ -119,7 +119,7 @@ exports.urlsCn = {
     graphql: "https://leetcode.cn/graphql",
     userGraphql: "https://leetcode.cn/graphql/",
     login: "https://leetcode.cn/accounts/login/",
-    authLoginUrl: `https://leetcode.cn/authorize-login/${protocol}/?path=${extensionId}`,
+    authLoginUrl: `https://leetcode.cn/authorize-login/${protocol}/?path=${forkConfig.getPublishedExtensionId()}`,
 };
 const getUrl = (key) => {
     const leetCodeConfig = vscode.workspace.getConfiguration("leetcode");
