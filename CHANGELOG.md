@@ -3,6 +3,10 @@ All notable changes to the "leetcode" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [1.0.2]
+### Fixed
+- Fixed the first problem-open flow so the description panel reliably appears on the left on initial open.
+
 ## [1.0.1]
 ### Changed
 - Refreshed Marketplace details to focus on features, workflow, and usage.

@@ -21,6 +21,7 @@ function prepareProblemPresentation(showDescriptionInWebview, showDescription) {
             orientation: 0,
             groups: forkConfig.getProblemEditorGroups(),
         });
+        yield vscode.commands.executeCommand("workbench.action.focusFirstEditorGroup");
         yield showDescription();
     });
 }
@@ -43,4 +44,3 @@ function finishProblemWorkspace(finalPath, workspaceFolder, closeOtherTabs) {
     });
 }
 exports.finishProblemWorkspace = finishProblemWorkspace;
-
