@@ -55,6 +55,13 @@ class CustomCodeLensProvider {
                 arguments: [document.uri],
             }));
         }
+        if (shortcuts.indexOf("github") >= 0) {
+            codeLens.push(new vscode.CodeLens(range, {
+                title: "GitHub",
+                command: "leetcode.uploadSolutionToGitHub",
+                arguments: [document.uri],
+            }));
+        }
         if (shortcuts.indexOf("star") >= 0 && node) {
             codeLens.push(new vscode.CodeLens(range, {
                 title: node.isFavorite ? "Unstar" : "Star",

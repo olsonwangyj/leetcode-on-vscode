@@ -48,106 +48,63 @@ class LeetCodeSubmissionProvider extends LeetCodeWebview_1.LeetCodeWebview {
                 ${styles}
                 <style>
                     body {
-                        padding: 20px 24px 40px;
+                        padding: 16px 20px 32px;
                     }
                     .panel {
-                        max-width: 980px;
+                        max-width: 920px;
                         margin: 0 auto;
                     }
-                    .hero {
-                        padding: 18px 20px;
-                        border-radius: 16px;
-                        border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
-                        background:
-                            radial-gradient(circle at top right, rgba(86, 156, 214, 0.18), transparent 38%),
-                            linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent);
-                    }
-                    .hero h1 {
-                        margin: 0;
+                    .title {
+                        margin: 0 0 12px;
                         font-size: 28px;
-                        line-height: 1.2;
+                        line-height: 1.25;
                     }
-                    .hero ul {
-                        margin: 12px 0 0;
+                    .message-list {
+                        margin: 0 0 20px;
                         padding-left: 18px;
                         color: var(--vscode-descriptionForeground);
                     }
-                    .case-list,
-                    .section-list {
-                        display: grid;
-                        gap: 16px;
+                    .message-list li {
+                        margin: 4px 0;
+                    }
+                    .result-section {
                         margin-top: 18px;
+                        padding-top: 16px;
+                        border-top: 1px solid var(--vscode-panel-border);
                     }
-                    .case-card,
-                    .section-card {
-                        border-radius: 16px;
-                        border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
-                        overflow: hidden;
-                        background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
-                    }
-                    .case-header,
-                    .section-header {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        gap: 12px;
-                        padding: 14px 16px;
-                        border-bottom: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
-                        background: rgba(255, 255, 255, 0.03);
-                    }
-                    .case-title,
                     .section-title {
-                        font-size: 18px;
+                        margin: 0 0 12px;
+                        font-size: 20px;
                         font-weight: 600;
                     }
-                    .badge {
-                        display: inline-flex;
-                        align-items: center;
-                        justify-content: center;
-                        min-width: 82px;
-                        padding: 4px 10px;
-                        border-radius: 999px;
-                        font-size: 12px;
-                        font-weight: 700;
-                        letter-spacing: 0.05em;
+                    .section-status {
+                        margin: -4px 0 12px;
+                        color: var(--vscode-descriptionForeground);
+                        font-size: 13px;
                         text-transform: uppercase;
+                        letter-spacing: 0.04em;
                     }
-                    .badge.pass {
-                        background: rgba(76, 175, 80, 0.18);
-                        color: #a8e6a3;
-                    }
-                    .badge.fail {
-                        background: rgba(244, 67, 54, 0.18);
-                        color: #ffb4ad;
-                    }
-                    .badge.info {
-                        background: rgba(86, 156, 214, 0.18);
-                        color: #9ecfff;
-                    }
-                    .field-list {
-                        display: grid;
-                        gap: 12px;
-                        padding: 14px 16px 16px;
+                    .field {
+                        margin-top: 12px;
                     }
                     .field-label {
-                        margin-bottom: 6px;
-                        font-size: 12px;
-                        font-weight: 700;
-                        letter-spacing: 0.05em;
-                        text-transform: uppercase;
-                        color: var(--vscode-descriptionForeground);
+                        margin: 0 0 6px;
+                        font-size: 13px;
+                        font-weight: 600;
                     }
                     .field-value {
                         margin: 0;
                         padding: 10px 12px;
-                        border-radius: 10px;
-                        border: 1px solid rgba(255, 255, 255, 0.06);
                         background: var(--vscode-textCodeBlock-background);
+                        border-radius: 6px;
                         white-space: pre-wrap;
                         word-break: break-word;
                         font-family: var(--vscode-editor-font-family);
                         font-size: 13px;
                         line-height: 1.5;
+                    }
+                    .muted {
+                        color: var(--vscode-descriptionForeground);
                     }
                 </style>
             </head>
@@ -168,9 +125,8 @@ class LeetCodeSubmissionProvider extends LeetCodeWebview_1.LeetCodeWebview {
     renderGroupedCases() {
         const summary = this.escapeHtml(this.result.messages[0] || "Result");
         const extraMessages = this.result.messages.slice(1).filter((message) => !/^((Example|Failed Case) \d+): /.test(message));
-        const cards = this.buildCaseGroups().map((group) => {
-            const statusLabel = group.comparison || group.status || "INFO";
-            const statusClass = this.getBadgeClass(statusLabel);
+        const sections = this.buildCaseGroups().map((group) => {
+            const statusLabel = this.escapeHtml(group.comparison || group.status || "INFO");
             const fields = group.fields.map((field) => `
                 <div class="field">
                     <div class="field-label">${this.escapeHtml(field.label)}</div>
@@ -178,32 +134,24 @@ class LeetCodeSubmissionProvider extends LeetCodeWebview_1.LeetCodeWebview {
                 </div>
             `).join("");
             return `
-                <section class="case-card">
-                    <div class="case-header">
-                        <div class="case-title">${this.escapeHtml(group.label)}</div>
-                        <div class="badge ${statusClass}">${this.escapeHtml(statusLabel)}</div>
-                    </div>
-                    <div class="field-list">
-                        ${fields}
-                    </div>
+                <section class="result-section">
+                    <h2 class="section-title">${this.escapeHtml(group.label)}</h2>
+                    <div class="section-status">${statusLabel}</div>
+                    ${fields}
                 </section>
             `;
         }).join("");
         const summaryList = extraMessages.length
-            ? `<ul>${extraMessages.map((message) => `<li>${this.escapeHtml(message)}</li>`).join("")}</ul>`
+            ? `<ul class="message-list">${extraMessages.map((message) => `<li>${this.escapeHtml(message)}</li>`).join("")}</ul>`
             : "";
-        const fallback = !cards
+        const fallback = !sections
             ? this.renderRawFallback("No case details were parsed from the result.")
             : "";
         return `
-            <section class="hero">
-                <h1>${summary}</h1>
-                ${summaryList}
-            </section>
-            <div class="case-list">
-                ${cards}
-                ${fallback}
-            </div>
+            <h1 class="title">${summary}</h1>
+            ${summaryList}
+            ${sections}
+            ${fallback}
         `;
     }
     renderDefaultLayout() {
@@ -212,31 +160,23 @@ class LeetCodeSubmissionProvider extends LeetCodeWebview_1.LeetCodeWebview {
         const sections = Object.keys(this.result)
             .filter((key) => key !== "messages")
             .map((key) => `
-                <section class="section-card">
-                    <div class="section-header">
-                        <div class="section-title">${this.escapeHtml(key)}</div>
-                    </div>
-                    <div class="field-list">
-                        <pre class="field-value">${this.escapeHtml(this.result[key].join("\n"))}</pre>
-                    </div>
+                <section class="result-section">
+                    <h2 class="section-title">${this.escapeHtml(key)}</h2>
+                    <pre class="field-value">${this.escapeHtml(this.result[key].join("\n"))}</pre>
                 </section>
             `)
             .join("");
         const messageList = messages.length
-            ? `<ul>${messages.map((message) => `<li>${this.escapeHtml(message)}</li>`).join("")}</ul>`
+            ? `<ul class="message-list">${messages.map((message) => `<li>${this.escapeHtml(message)}</li>`).join("")}</ul>`
             : "";
         const fallback = !messages.length && !sections
             ? this.renderRawFallback("No structured details were parsed from the result.")
             : "";
         return `
-            <section class="hero">
-                <h1>${title}</h1>
-                ${messageList}
-            </section>
-            <div class="section-list">
-                ${sections}
-                ${fallback}
-            </div>
+            <h1 class="title">${title}</h1>
+            ${messageList}
+            ${sections}
+            ${fallback}
         `;
     }
     buildCaseGroups() {

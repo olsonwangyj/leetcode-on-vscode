@@ -18,6 +18,7 @@ const cache = require("./commands/cache");
 const language_1 = require("./commands/language");
 const plugin = require("./commands/plugin");
 const session = require("./commands/session");
+const githubUpload = require("./commands/githubUpload");
 const show = require("./commands/show");
 const star = require("./commands/star");
 const submit = require("./commands/submit");
@@ -58,7 +59,7 @@ function activate(context) {
                     }),
                 });
                 show.previewProblem(node);
-            }), vscode.commands.registerCommand("leetcode.showProblem", (node) => show.showProblem(node)), vscode.commands.registerCommand("leetcode.pickOne", () => show.pickOne()), vscode.commands.registerCommand("leetcode.searchProblem", () => show.searchProblem()), vscode.commands.registerCommand("leetcode.showSolution", (input) => show.showSolution(input)), vscode.commands.registerCommand("leetcode.refreshExplorer", () => LeetCodeTreeDataProvider_1.leetCodeTreeDataProvider.refresh()), vscode.commands.registerCommand("leetcode.testSolution", (uri) => {
+            }), vscode.commands.registerCommand("leetcode.showProblem", (node) => show.showProblem(node)), vscode.commands.registerCommand("leetcode.pickOne", () => show.pickOne()), vscode.commands.registerCommand("leetcode.searchProblem", () => show.searchProblem()), vscode.commands.registerCommand("leetcode.showSolution", (input) => show.showSolution(input)), vscode.commands.registerCommand("leetcode.uploadSolutionToGitHub", (input) => githubUpload.uploadSolutionToGitHub(input)), vscode.commands.registerCommand("leetcode.uploadSolutionsToGitHubBatch", () => githubUpload.uploadSolutionsToGitHubBatch()), vscode.commands.registerCommand("leetcode.refreshExplorer", () => LeetCodeTreeDataProvider_1.leetCodeTreeDataProvider.refresh()), vscode.commands.registerCommand("leetcode.testSolution", (uri) => {
                 trackingUtils_1.default.report({
                     event_key: `vscode_runCode`,
                     type: "click",
