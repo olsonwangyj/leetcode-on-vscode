@@ -372,7 +372,7 @@ function pushSolutionCommit(targetRepoRoot) {
             }
             catch (error) {
                 leetCodeChannel_1.leetCodeChannel.appendLine(error.toString());
-                vscode.window.showWarningMessage("The solution commit was created locally, but pushing to GitHub failed. Please check your remote and credentials.");
+                yield showGitHubSetupGuidance(error, "The solution commit was created locally, but pushing to GitHub failed.");
                 return false;
             }
         }
@@ -413,8 +413,75 @@ function runGitWithProgress(targetRepoRoot, args, message) {
 function handleUploadFailure(error) {
     return __awaiter(this, void 0, void 0, function* () {
         leetCodeChannel_1.leetCodeChannel.appendLine(error.toString());
-        yield uiUtils_1.promptForOpenOutputChannel("Failed to upload the solution to GitHub. Please open the output channel for details.", uiUtils_1.DialogType.error);
+        const handled = yield showGitHubSetupGuidance(error, "Failed to upload the solution to GitHub.");
+        if (!handled) {
+            yield uiUtils_1.promptForOpenOutputChannel("Failed to upload the solution to GitHub. Please open the output channel for details.", uiUtils_1.DialogType.error);
+        }
     });
+}
+function showGitHubSetupGuidance(error, prefixMessage) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const details = getErrorDetails(error);
+        if (!details) {
+            return false;
+        }
+        if (looksLikeGitHubAuthError(details)) {
+            const openOutput = { title: "Open Output" };
+            const openHttpsGuide = { title: "HTTPS Guide" };
+            const openSshGuide = { title: "SSH Guide" };
+            const choice = yield vscode.window.showErrorMessage(`${prefixMessage} GitHub authentication is not set up on this computer. Sign in to git first, then try again. You can use HTTPS credentials/PAT or SSH keys.`, openOutput, openHttpsGuide, openSshGuide);
+            if (choice === openOutput) {
+                leetCodeChannel_1.leetCodeChannel.show();
+            }
+            else if (choice === openHttpsGuide) {
+                yield uiUtils_1.openUrl("https://docs.github.com/en/get-started/git-basics/caching-your-github-credentials-in-git");
+            }
+            else if (choice === openSshGuide) {
+                yield uiUtils_1.openUrl("https://docs.github.com/en/authentication/connecting-to-github-with-ssh");
+            }
+            return true;
+        }
+        if (looksLikeGitHubPermissionError(details)) {
+            const openOutput = { title: "Open Output" };
+            const openRepoGuide = { title: "Repo Access Help" };
+            const choice = yield vscode.window.showErrorMessage(`${prefixMessage} This GitHub account does not have access to the target repository, or the repository URL is wrong. Check the repo URL and repository permissions, then try again.`, openOutput, openRepoGuide);
+            if (choice === openOutput) {
+                leetCodeChannel_1.leetCodeChannel.show();
+            }
+            else if (choice === openRepoGuide) {
+                yield uiUtils_1.openUrl("https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/managing-repository-settings/repository-visibility");
+            }
+            return true;
+        }
+        return false;
+    });
+}
+function getErrorDetails(error) {
+    if (!error) {
+        return "";
+    }
+    return String(error.result || error.message || error.toString() || "").trim();
+}
+function looksLikeGitHubAuthError(details) {
+    const normalized = details.toLowerCase();
+    return normalized.includes("authentication failed")
+        || normalized.includes("could not read username")
+        || normalized.includes("terminal prompts disabled")
+        || normalized.includes("support for password authentication was removed")
+        || normalized.includes("permission denied (publickey)")
+        || normalized.includes("permission denied (publickey,password)")
+        || normalized.includes("fatal: credential")
+        || normalized.includes("could not authenticate")
+        || normalized.includes("access denied")
+        || normalized.includes("403");
+}
+function looksLikeGitHubPermissionError(details) {
+    const normalized = details.toLowerCase();
+    return normalized.includes("repository not found")
+        || normalized.includes("not found")
+        || normalized.includes("write access to repository not granted")
+        || normalized.includes("permission to")
+        || normalized.includes("requested url returned error: 403");
 }
 function resolveWorkspaceRoot() {
     return __awaiter(this, void 0, void 0, function* () {

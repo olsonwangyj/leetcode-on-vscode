@@ -2,7 +2,7 @@
 	"name": "leetcode-on-vscode",
 	"displayName": "LeetCode on VSCode",
 	"description": "Solve LeetCode problems in VS Code with faster testing, cleaner submissions, and a focused workspace layout.",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"author": "olsonwangyj",
 	"publisher": "olsonwangyj",
 	"license": "MIT",
