@@ -51,7 +51,14 @@ class CustomCodeLensProvider {
         if (shortcuts.indexOf("test") >= 0) {
             codeLens.push(new vscode.CodeLens(range, {
                 title: "Test",
-                command: "leetcode.testSolution",
+                command: "leetcode.testSolutionDirect",
+                arguments: [document.uri],
+            }));
+        }
+        if (shortcuts.indexOf("debug") >= 0) {
+            codeLens.push(new vscode.CodeLens(range, {
+                title: "Debug",
+                command: "leetcode.debugSolution",
                 arguments: [document.uri],
             }));
         }

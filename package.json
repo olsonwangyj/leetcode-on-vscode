@@ -2,7 +2,7 @@
 	"name": "leetcode-on-vscode",
 	"displayName": "LeetCode on VSCode",
 	"description": "Solve LeetCode problems in VS Code with faster testing, cleaner submissions, and a focused workspace layout.",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"author": "olsonwangyj",
 	"publisher": "olsonwangyj",
 	"license": "MIT",
@@ -41,6 +41,8 @@
 		"onCommand:leetcode.searchProblem",
 		"onCommand:leetcode.testSolution",
 		"onCommand:leetcode.testSolutionDirect",
+		"onCommand:leetcode.openDebugCases",
+		"onCommand:leetcode.debugSolution",
 		"onCommand:leetcode.submitSolution",
 		"onCommand:leetcode.switchDefaultLanguage",
 		"onCommand:leetcode.problems.sort",
@@ -117,6 +119,18 @@
 				"command": "leetcode.testSolutionDirect",
 				"title": "Test in LeetCode (Direct)",
 				"category": "LeetCode Companion"
+			},
+			{
+				"command": "leetcode.openDebugCases",
+				"title": "Open Debug Cases File",
+				"category": "LeetCode Companion",
+				"icon": "$(note)"
+			},
+			{
+				"command": "leetcode.debugSolution",
+				"title": "Debug in VS Code",
+				"category": "LeetCode Companion",
+				"icon": "$(debug)"
 			},
 			{
 				"command": "leetcode.submitSolution",
@@ -281,19 +295,24 @@
 			],
 			"explorer/context": [
 				{
-					"command": "leetcode.testSolution",
+					"command": "leetcode.testSolutionDirect",
 					"when": "explorerResourceIsFolder == false",
 					"group": "leetcode@1"
 				},
 				{
-					"command": "leetcode.submitSolution",
+					"command": "leetcode.debugSolution",
 					"when": "explorerResourceIsFolder == false",
 					"group": "leetcode@2"
 				},
 				{
-					"command": "leetcode.uploadSolutionToGitHub",
+					"command": "leetcode.submitSolution",
 					"when": "explorerResourceIsFolder == false",
 					"group": "leetcode@3"
+				},
+				{
+					"command": "leetcode.uploadSolutionToGitHub",
+					"when": "explorerResourceIsFolder == false",
+					"group": "leetcode@4"
 				}
 			],
 			"editor/context": [
@@ -301,26 +320,41 @@
 					"submenu": "leetcode.editorAction"
 				}
 			],
+			"editor/title": [
+				{
+					"command": "leetcode.debugSolution",
+					"when": "resourceScheme == file && resourceFilename =~ /^\\d+\\..+$/",
+					"group": "navigation@1"
+				}
+			],
 			"leetcode.editorAction": [
 				{
-					"command": "leetcode.testSolution",
+					"command": "leetcode.testSolutionDirect",
 					"group": "leetcode@1"
 				},
 				{
-					"command": "leetcode.submitSolution",
+					"command": "leetcode.debugSolution",
 					"group": "leetcode@2"
 				},
 				{
-					"command": "leetcode.uploadSolutionToGitHub",
+					"command": "leetcode.submitSolution",
 					"group": "leetcode@3"
 				},
 				{
-					"command": "leetcode.showSolution",
+					"command": "leetcode.uploadSolutionToGitHub",
 					"group": "leetcode@4"
 				},
 				{
-					"command": "leetcode.previewProblem",
+					"command": "leetcode.openDebugCases",
 					"group": "leetcode@5"
+				},
+				{
+					"command": "leetcode.showSolution",
+					"group": "leetcode@6"
+				},
+				{
+					"command": "leetcode.previewProblem",
+					"group": "leetcode@7"
 				}
 			]
 		},
@@ -721,6 +755,7 @@
 						"default": [
 							"submit",
 							"test",
+							"debug",
 							"github"
 						],
 						"scope": "application",
@@ -729,6 +764,7 @@
 							"enum": [
 								"submit",
 								"test",
+								"debug",
 								"github",
 								"star",
 								"solution",
@@ -737,6 +773,7 @@
 							"enumDescriptions": [
 								"Submit your answer to LeetCode.",
 								"Test your answer with customized test cases.",
+								"Pick a testcase and launch VS Code breakpoint debugging for the current problem.",
 								"Upload the current solution file to your GitHub repository.",
 								"Star or unstar the current problem.",
 								"Show the top voted solution for the current problem.",

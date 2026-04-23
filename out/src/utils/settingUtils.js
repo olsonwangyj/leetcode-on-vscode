@@ -18,11 +18,11 @@ function getWorkspaceFolder() {
 }
 exports.getWorkspaceFolder = getWorkspaceFolder;
 function getEditorShortcuts() {
-    return getWorkspaceConfiguration().get("editor.shortcuts", ["submit", "test", "github"]);
+    return getWorkspaceConfiguration().get("editor.shortcuts", ["submit", "test", "debug", "github"]);
 }
 exports.getEditorShortcuts = getEditorShortcuts;
 function hasStarShortcut() {
-    const shortcuts = getWorkspaceConfiguration().get("editor.shortcuts", ["submit", "test", "github"]);
+    const shortcuts = getWorkspaceConfiguration().get("editor.shortcuts", ["submit", "test", "debug", "github"]);
     return shortcuts.indexOf("star") >= 0;
 }
 exports.hasStarShortcut = hasStarShortcut;

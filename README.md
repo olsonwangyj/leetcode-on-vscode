@@ -7,6 +7,7 @@ Solve LeetCode problems in VS Code with faster testing, cleaner submissions, and
 - Browse, search, and open LeetCode problems directly in VS Code.
 - Keep the problem description on the left and your code on the right.
 - Run tests with a faster direct workflow instead of jumping through extra prompts.
+- Debug Java solutions with real VS Code breakpoints from the editor title bar.
 - Parse multiple examples from the problem description and run them in sequence.
 - Save failed submission cases and replay them in later local tests.
 - Read cleaner grouped submission output with inputs, outputs, and comparisons.
@@ -35,6 +36,14 @@ Solve LeetCode problems in VS Code with faster testing, cleaner submissions, and
 - Failed cases from previous submissions can be replayed in later test runs.
 - Submission results are formatted into clearer sections for faster debugging.
 - Local `stdout` is preserved when LeetCode returns it, which makes `println`-style debugging easier.
+
+## Debugging in VS Code
+
+- Open a Java solution and click the `Debug in VS Code` bug button in the editor title bar.
+- Pick an official example, a failed case, a saved case from `.debug.txt`, or `Custom Input...`.
+- Custom input is collected one parameter at a time, so you can type values the same way you would in LeetCode's `Input` box.
+- `Open Debug Cases File` creates a sibling `.debug.txt` file where you can keep your own reusable cases.
+- On a fresh machine, the first debug run may ask you to install the Java debugger tools or a JDK. Use the guided buttons, finish the one-time setup, then click `Debug in VS Code` again.
 
 ## Workspace Behavior
 
