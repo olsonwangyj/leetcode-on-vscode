@@ -120,11 +120,11 @@ class LeetCodeSubmissionProvider extends LeetCodeWebview_1.LeetCodeWebview {
         super.onDidDisposeWebview();
     }
     hasGroupedCases() {
-        return Object.keys(this.result).some((key) => key !== "messages" && /^((Example|Failed Case) \d+) /.test(key));
+        return Object.keys(this.result).some((key) => key !== "messages" && /^((Example|Failed Case|Debug Case) \d+) /.test(key));
     }
     renderGroupedCases() {
         const summary = this.escapeHtml(this.result.messages[0] || "Result");
-        const extraMessages = this.result.messages.slice(1).filter((message) => !/^((Example|Failed Case) \d+): /.test(message));
+        const extraMessages = this.result.messages.slice(1).filter((message) => !/^((Example|Failed Case|Debug Case) \d+): /.test(message));
         const sections = this.buildCaseGroups().map((group) => {
             const statusLabel = this.escapeHtml(group.comparison || group.status || "INFO");
             const fields = group.fields.map((field) => `
@@ -193,7 +193,7 @@ class LeetCodeSubmissionProvider extends LeetCodeWebview_1.LeetCodeWebview {
             return groups.get(label);
         };
         for (const message of this.result.messages.slice(1)) {
-            const match = message.match(/^((Example|Failed Case) \d+):\s*(.+)$/);
+            const match = message.match(/^((Example|Failed Case|Debug Case) \d+):\s*(.+)$/);
             if (!match) {
                 continue;
             }
@@ -203,7 +203,7 @@ class LeetCodeSubmissionProvider extends LeetCodeWebview_1.LeetCodeWebview {
             if (key === "messages") {
                 continue;
             }
-            const match = key.match(/^((Example|Failed Case) \d+) (.+)$/);
+            const match = key.match(/^((Example|Failed Case|Debug Case) \d+) (.+)$/);
             if (!match) {
                 continue;
             }

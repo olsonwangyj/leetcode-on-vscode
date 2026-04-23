@@ -37,6 +37,7 @@ function submitSolution(uri) {
             leetCodeSubmissionProvider_1.leetCodeSubmissionProvider.show(result);
         }
         catch (error) {
+            leetCodeSubmissionProvider_1.leetCodeSubmissionProvider.show(formatSubmissionError(error));
             yield uiUtils_1.promptForOpenOutputChannel("Failed to submit the solution. Please open the output channel for details.", uiUtils_1.DialogType.error);
             return;
         }
@@ -44,6 +45,22 @@ function submitSolution(uri) {
     });
 }
 exports.submitSolution = submitSolution;
+function formatSubmissionError(error) {
+    const message = cleanErrorMessage(error && error.result ? error.result : error);
+    return `  ✘ Submission failed\n  ✘ Error: ${message}`;
+}
+function cleanErrorMessage(input) {
+    const lines = String(input || "")
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .filter((line) => !line.startsWith("- Sending code to judge"))
+        .filter((line) => !line.startsWith("- Waiting for judge result"))
+        .filter((line) => !line.startsWith("(node:"))
+        .filter((line) => !line.startsWith("(Use `node --trace-warnings"))
+        .filter((line) => !line.includes("DeprecationWarning"));
+    return lines[0] || "Unknown error";
+}
 function saveFailedSubmissionTestcase(filePath, raw) {
     return __awaiter(this, void 0, void 0, function* () {
         const parsed = parseResult(raw);
