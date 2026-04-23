@@ -20,6 +20,7 @@ required = {
     "extension/resources/LeetCodeOnVSCode.png",
     "extension/resources/LeetCodeOnVSCode.svg",
     "extension/resources/LeetCodeOnVSCode-mono.svg",
+    "extension/out/src/commands/debug.js",
 }
 forbidden_fragments = [
     "out/src/.env.local",
@@ -27,6 +28,8 @@ forbidden_fragments = [
     "resources/AlgoWorkspace",
     "resources/LeetCode.png",
     "resources/LeetCode.svg",
+    "extension/debug.js",
+    "extension/smoke/",
 ]
 
 with zipfile.ZipFile(vsix_path) as archive:

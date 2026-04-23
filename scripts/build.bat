@@ -15,6 +15,12 @@ if %ERRORLEVEL%==0 (
 echo Checking key runtime modules...
 node --check out/src/shared.js
 if %ERRORLEVEL% neq 0 exit /b 1
+node --check out/src/commands/debug.js
+if %ERRORLEVEL% neq 0 exit /b 1
+node --check out/src/commands/submit.js
+if %ERRORLEVEL% neq 0 exit /b 1
+node --check out/src/extension.js
+if %ERRORLEVEL% neq 0 exit /b 1
 node --check out/src/commands/show.js
 if %ERRORLEVEL% neq 0 exit /b 1
 node --check out/src/utils/forkConfig.js

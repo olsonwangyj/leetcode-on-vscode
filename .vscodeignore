@@ -3,8 +3,10 @@
 _config.yml
 .gitignore
 RELEASE.md
+debug.js
 requirements/**
 scripts/**
+smoke/**
 resources/AlgoWorkspace-mono.svg
 resources/AlgoWorkspace.png
 resources/AlgoWorkspace.svg

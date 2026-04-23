@@ -13,6 +13,9 @@ fi
 
 echo "Checking key runtime modules..."
 node --check out/src/shared.js
+node --check out/src/commands/debug.js
+node --check out/src/commands/submit.js
+node --check out/src/extension.js
 node --check out/src/commands/show.js
 node --check out/src/utils/forkConfig.js
 node --check out/src/utils/problemWorkspaceLayout.js
