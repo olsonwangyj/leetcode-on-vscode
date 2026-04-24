@@ -14,6 +14,7 @@ const childProcess = require("child_process");
 const crypto = require("crypto");
 const fse = require("fs-extra");
 const he = require("he");
+const net = require("net");
 const os = require("os");
 const path = require("path");
 const util = require("util");
@@ -35,9 +36,15 @@ const JAVA_DEBUGGING_DOC_URL = "https://code.visualstudio.com/docs/java/java-deb
 const JAVA_SETUP_DOC_URL = "https://code.visualstudio.com/docs/java/java-project#_configure-jdk";
 const JDK_DOWNLOAD_URL = "https://adoptium.net/";
 const DEBUG_RUNTIME_ROOT = path.join(os.homedir(), ".leetcode", ".debug-runtime");
+const JAVA_DEBUG_ATTACH_HOST = "127.0.0.1";
+const JAVA_DEBUG_ATTACH_POLL_MS = 150;
+const JAVA_DEBUG_ATTACH_TIMEOUT_MS = 15000;
 const INTER_TEST_DELAY_MS = 2000;
 const RATE_LIMIT_RETRY_DELAYS_MS = [5000, 10000, 15000];
 const execFile = util.promisify(childProcess.execFile);
+const activeJavaDebugProcesses = new Map();
+let javaDebugOutputChannel;
+let javaDebugSessionHooksRegistered = false;
 function debugSolution(uri) {
     return __awaiter(this, void 0, void 0, function* () {
         const filePath = yield getActiveFilePath(uri);
@@ -97,22 +104,24 @@ function debugJavaSolution(filePath, uri) {
             throw new UserCancelledError();
         }
         const debugRuntime = yield prepareJavaDebugWorkspace(filePath, selectedCase, entryMethod.name);
-        const started = yield vscode.debug.startDebugging(undefined, {
-            type: "java",
-            name: `LeetCode Debug: ${path.basename(filePath)}`,
-            request: "launch",
-            mainClass: DEBUG_MAIN_CLASS,
-            classPaths: [debugRuntime.classesDir],
-            sourcePaths: [path.dirname(filePath), debugRuntime.sourceDir],
-            cwd: path.dirname(filePath),
-            console: "integratedTerminal",
-            skipBuild: true,
-            stopOnEntry: false,
-            shortenCommandLine: "auto",
-            vmArgs: "-Dfile.encoding=UTF-8",
-        });
-        if (!started) {
-            throw new Error("VS Code did not start the Java debug session.");
+        const sessionName = `LeetCode Debug: ${path.basename(filePath)} [${Date.now().toString(36)}]`;
+        const launchedProcess = yield launchIsolatedJavaDebugProcess(filePath, debugRuntime, sessionName);
+        try {
+            const started = yield vscode.debug.startDebugging(undefined, {
+                type: "java",
+                name: sessionName,
+                request: "attach",
+                hostName: JAVA_DEBUG_ATTACH_HOST,
+                port: launchedProcess.port,
+                sourcePaths: [path.dirname(filePath), debugRuntime.sourceDir],
+            });
+            if (!started) {
+                throw new Error("VS Code did not start the Java debug session.");
+            }
+        }
+        catch (error) {
+            cleanupJavaDebugProcess(sessionName, "Debug session failed to attach.");
+            throw error;
         }
     });
 }
@@ -378,6 +387,168 @@ function prepareJavaDebugWorkspace(filePath, selectedCase, entryMethodName) {
         return { sourceDir, classesDir, helperPath };
     });
 }
+function launchIsolatedJavaDebugProcess(filePath, debugRuntime, sessionName) {
+    return __awaiter(this, void 0, void 0, function* () {
+        ensureJavaDebugSessionHooks();
+        const javacPath = yield resolveJavacPath();
+        const javaPath = yield resolveJavaPath(javacPath);
+        const port = yield findAvailablePort();
+        const outputChannel = getJavaDebugOutputChannel();
+        const javaArgs = [
+            `-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=${JAVA_DEBUG_ATTACH_HOST}:${port}`,
+            "-XX:+ShowCodeDetailsInExceptionMessages",
+            "-Dfile.encoding=UTF-8",
+            "-cp",
+            debugRuntime.classesDir,
+            DEBUG_MAIN_CLASS,
+        ];
+        outputChannel.appendLine("");
+        outputChannel.appendLine(`[LeetCode Debug] Starting ${sessionName}`);
+        outputChannel.appendLine(`[LeetCode Debug] Source: ${filePath}`);
+        outputChannel.appendLine(`[LeetCode Debug] Classpath: ${debugRuntime.classesDir}`);
+        outputChannel.appendLine(`[LeetCode Debug] Command: ${javaPath} ${javaArgs.join(" ")}`);
+        const child = childProcess.spawn(javaPath, javaArgs, {
+            cwd: path.dirname(filePath),
+            stdio: ["ignore", "pipe", "pipe"],
+        });
+        const runtime = {
+            child,
+            outputChannel,
+            sessionName,
+        };
+        activeJavaDebugProcesses.set(sessionName, runtime);
+        let stdout = "";
+        let stderr = "";
+        child.stdout.on("data", (chunk) => {
+            const text = chunk.toString();
+            stdout += text;
+            outputChannel.append(text);
+        });
+        child.stderr.on("data", (chunk) => {
+            const text = chunk.toString();
+            stderr += text;
+            outputChannel.append(text);
+        });
+        child.on("exit", (code, signal) => {
+            activeJavaDebugProcesses.delete(sessionName);
+            const status = signal ? `signal ${signal}` : `exit code ${code === null ? "unknown" : code}`;
+            outputChannel.appendLine(`\n[LeetCode Debug] Java process ended with ${status}.`);
+        });
+        try {
+            yield waitForJavaDebugServer(child, port);
+        }
+        catch (error) {
+            cleanupJavaDebugProcess(sessionName, "Java debug launch did not become attachable.");
+            const details = summarizeJavaLaunchFailure(stdout, stderr);
+            throw new Error(details ? `${error.message}\n${details}` : error.message);
+        }
+        return { port };
+    });
+}
+function getJavaDebugOutputChannel() {
+    if (!javaDebugOutputChannel) {
+        javaDebugOutputChannel = vscode.window.createOutputChannel("LeetCode Debug");
+    }
+    return javaDebugOutputChannel;
+}
+function ensureJavaDebugSessionHooks() {
+    if (javaDebugSessionHooksRegistered) {
+        return;
+    }
+    javaDebugSessionHooksRegistered = true;
+    vscode.debug.onDidTerminateDebugSession((session) => {
+        cleanupJavaDebugProcess(session.name, "Debug session ended.");
+    });
+}
+function cleanupJavaDebugProcess(sessionName, reason) {
+    const runtime = activeJavaDebugProcesses.get(sessionName);
+    if (!runtime) {
+        return;
+    }
+    activeJavaDebugProcesses.delete(sessionName);
+    if (!runtime.child.killed) {
+        runtime.outputChannel.appendLine(`[LeetCode Debug] ${reason}`);
+        runtime.child.kill();
+    }
+}
+function waitForJavaDebugServer(child, port) {
+    return new Promise((resolve, reject) => {
+        let settled = false;
+        const timeout = setTimeout(() => {
+            fail(new Error(`Timed out waiting for the Java debug server on port ${port}.`));
+        }, JAVA_DEBUG_ATTACH_TIMEOUT_MS);
+        const onError = (error) => {
+            fail(error instanceof Error ? error : new Error(String(error || "Unknown Java debug launch failure.")));
+        };
+        const onExit = (code, signal) => {
+            const status = signal ? `signal ${signal}` : `exit code ${code === null ? "unknown" : code}`;
+            fail(new Error(`The isolated Java debug launcher ended before VS Code could attach (${status}).`));
+        };
+        const tryConnect = () => {
+            if (settled) {
+                return;
+            }
+            const socket = net.createConnection({ host: JAVA_DEBUG_ATTACH_HOST, port }, () => {
+                socket.end();
+                succeed();
+            });
+            socket.on("error", () => {
+                socket.destroy();
+                if (!settled) {
+                    setTimeout(tryConnect, JAVA_DEBUG_ATTACH_POLL_MS);
+                }
+            });
+        };
+        const succeed = () => {
+            if (settled) {
+                return;
+            }
+            settled = true;
+            clearTimeout(timeout);
+            child.removeListener("error", onError);
+            child.removeListener("exit", onExit);
+            resolve();
+        };
+        const fail = (error) => {
+            if (settled) {
+                return;
+            }
+            settled = true;
+            clearTimeout(timeout);
+            child.removeListener("error", onError);
+            child.removeListener("exit", onExit);
+            reject(error);
+        };
+        child.once("error", onError);
+        child.once("exit", onExit);
+        tryConnect();
+    });
+}
+function summarizeJavaLaunchFailure(stdout, stderr) {
+    const combined = [normalizeTestcase(stderr), normalizeTestcase(stdout)].filter(Boolean);
+    return combined.join("\n");
+}
+function findAvailablePort() {
+    return new Promise((resolve, reject) => {
+        const server = net.createServer();
+        server.once("error", reject);
+        server.listen(0, JAVA_DEBUG_ATTACH_HOST, () => {
+            const address = server.address();
+            const port = address && typeof address === "object" ? address.port : 0;
+            server.close((error) => {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+                if (!port) {
+                    reject(new Error("Could not reserve a local port for Java debugging."));
+                    return;
+                }
+                resolve(port);
+            });
+        });
+    });
+}
 function resolveJavacPath() {
     return __awaiter(this, void 0, void 0, function* () {
         const locator = process.platform === "win32" ? "where" : "which";
@@ -401,6 +572,22 @@ function resolveJavacPath() {
             }
             throw new UserCancelledError();
         }
+    });
+}
+function resolveJavaPath(javacPath) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const javaBinaryName = process.platform === "win32" ? "java.exe" : "java";
+        const siblingJavaPath = path.join(path.dirname(javacPath), javaBinaryName);
+        if (yield fse.pathExists(siblingJavaPath)) {
+            return siblingJavaPath;
+        }
+        const locator = process.platform === "win32" ? "where" : "which";
+        const result = yield execFile(locator, ["java"]);
+        const javaPath = normalizeTestcase(result.stdout).split(/\r?\n/)[0];
+        if (!javaPath) {
+            throw new Error("java not found");
+        }
+        return javaPath;
     });
 }
 function detectJavaEntryMethod(filePath) {
@@ -681,7 +868,26 @@ public class ${DEBUG_MAIN_CLASS} {
             candidates.add(method);
         }
         if (candidates.isEmpty()) {
-            throw new IllegalStateException("Could not find the LeetCode entry method inside Solution.");
+            List<String> availableMethods = new ArrayList<>();
+            for (Method method : Solution.class.getDeclaredMethods()) {
+                if (method.isSynthetic() || method.isBridge()) {
+                    continue;
+                }
+                availableMethods.add(method.getName() + "/" + method.getParameterCount());
+            }
+            String loadedFrom = "<unknown>";
+            try {
+                java.security.CodeSource codeSource = Solution.class.getProtectionDomain().getCodeSource();
+                if (codeSource != null && codeSource.getLocation() != null) {
+                    loadedFrom = String.valueOf(codeSource.getLocation());
+                }
+            } catch (Exception ignored) {
+            }
+            throw new IllegalStateException("Could not find the LeetCode entry method inside Solution. Expected: "
+                + (TARGET_METHOD.isEmpty() ? "<auto>" : TARGET_METHOD)
+                + "/" + argumentCount
+                + ". Available: " + availableMethods
+                + ". Loaded from: " + loadedFrom);
         }
 
         List<Method> matchingByArity = new ArrayList<>();
