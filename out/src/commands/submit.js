@@ -20,6 +20,7 @@ const problemUtils_1 = require("../utils/problemUtils");
 const uiUtils_1 = require("../utils/uiUtils");
 const workspaceUtils_1 = require("../utils/workspaceUtils");
 const leetCodeSubmissionProvider_1 = require("../webview/leetCodeSubmissionProvider");
+const timer_1 = require("./timer");
 const TRUNCATED_TESTCASE_PATTERN = /\.\.\.\s+\d+\s+more character(?:s)?/i;
 function submitSolution(uri) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -35,6 +36,9 @@ function submitSolution(uri) {
             const result = yield leetCodeExecutor_1.leetCodeExecutor.submitSolution(filePath);
             yield saveFailedSubmissionTestcase(filePath, result);
             leetCodeSubmissionProvider_1.leetCodeSubmissionProvider.show(result);
+            if (isAcceptedSubmissionResult(result)) {
+                timer_1.problemTimer.notifyAccepted(filePath);
+            }
         }
         catch (error) {
             leetCodeSubmissionProvider_1.leetCodeSubmissionProvider.show(formatSubmissionError(error));
@@ -45,6 +49,12 @@ function submitSolution(uri) {
     });
 }
 exports.submitSolution = submitSolution;
+function isAcceptedSubmissionResult(raw) {
+    if (!/\bAccepted\b/i.test(raw)) {
+        return false;
+    }
+    return !/\b(Wrong Answer|Runtime Error|Compile Error|Time Limit Exceeded|Memory Limit Exceeded|Output Limit Exceeded|Presentation Error)\b/i.test(raw);
+}
 function formatSubmissionError(error) {
     const message = cleanErrorMessage(error && error.result ? error.result : error);
     return `  ✘ Submission failed\n  ✘ Error: ${message}`;

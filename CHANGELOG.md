@@ -3,6 +3,20 @@ All notable changes to the "leetcode" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [1.0.6]
+### Added
+- Added a problem timer that starts automatically when a LeetCode solution file is opened.
+- Added a live `Timer 00:00:00` badge near `@lc code=start`, a top timer CodeLens, and an editor title timer action.
+- Added timer controls to pause, resume, reset, stop, and copy elapsed time.
+
+### Changed
+- Updated Marketplace documentation with the timer workflow, Java debug flow, GitHub upload setup, and current GUI screenshots.
+- Improved release scripts and package checks for repeatable VSIX builds.
+
+### Fixed
+- Stopped accepted problem timers automatically by default and reported the final solving time.
+- Kept Java debug sessions isolated so the active problem attaches to the correct runtime.
+
 ## [1.0.2]
 ### Fixed
 - Fixed the first problem-open flow so the description panel reliably appears on the left on initial open.

@@ -32,6 +32,7 @@ const leetCodePreviewProvider_1 = require("../webview/leetCodePreviewProvider");
 const leetCodeSolutionProvider_1 = require("../webview/leetCodeSolutionProvider");
 const list = require("./list");
 const plugin_1 = require("./plugin");
+const timer_1 = require("./timer");
 const globalState_1 = require("../globalState");
 function previewProblem(input, isSideMode = false) {
     var _a;
@@ -197,6 +198,7 @@ function showProblemInternal(node) {
             yield problemWorkspaceLayout.prepareProblemPresentation(descriptionConfig.showInWebview, () => showDescriptionView(node));
             yield problemWorkspaceLayout.openProblemCodeEditor(finalPath, descriptionConfig.showInWebview);
             yield problemWorkspaceLayout.finishProblemWorkspace(finalPath, workspaceFolder, closeOtherProblemTabs);
+            timer_1.problemTimer.start(finalPath, node);
             yield uiUtils_1.promptHintMessage("hint.commentDescription", 'You can config how to show the problem description through "leetcode.showDescription".', "Open settings", () => uiUtils_1.openSettingsEditor("leetcode.showDescription"));
         }
         catch (error) {

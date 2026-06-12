@@ -2,7 +2,7 @@
 // Copyright (c) jdneo. All rights reserved.
 // Licensed under the MIT license.
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDescriptionConfiguration = exports.shouldUseEndpointTranslation = exports.hasStarShortcut = exports.getEditorShortcuts = exports.getWorkspaceFolder = exports.shouldHideSolvedProblem = exports.getWorkspaceConfiguration = void 0;
+exports.shouldStopProblemTimerOnAccepted = exports.isProblemTimerEnabled = exports.getDescriptionConfiguration = exports.shouldUseEndpointTranslation = exports.hasStarShortcut = exports.getEditorShortcuts = exports.getWorkspaceFolder = exports.shouldHideSolvedProblem = exports.getWorkspaceConfiguration = void 0;
 const vscode_1 = require("vscode");
 const shared_1 = require("../shared");
 function getWorkspaceConfiguration() {
@@ -18,11 +18,11 @@ function getWorkspaceFolder() {
 }
 exports.getWorkspaceFolder = getWorkspaceFolder;
 function getEditorShortcuts() {
-    return getWorkspaceConfiguration().get("editor.shortcuts", ["submit", "test", "debug", "github"]);
+    return getWorkspaceConfiguration().get("editor.shortcuts", ["submit", "test", "debug", "timer", "github"]);
 }
 exports.getEditorShortcuts = getEditorShortcuts;
 function hasStarShortcut() {
-    const shortcuts = getWorkspaceConfiguration().get("editor.shortcuts", ["submit", "test", "debug", "github"]);
+    const shortcuts = getWorkspaceConfiguration().get("editor.shortcuts", ["submit", "test", "debug", "timer", "github"]);
     return shortcuts.indexOf("star") >= 0;
 }
 exports.hasStarShortcut = hasStarShortcut;
@@ -61,4 +61,12 @@ function getDescriptionConfiguration() {
     return config;
 }
 exports.getDescriptionConfiguration = getDescriptionConfiguration;
+function isProblemTimerEnabled() {
+    return getWorkspaceConfiguration().get("problemTimer.enabled", true);
+}
+exports.isProblemTimerEnabled = isProblemTimerEnabled;
+function shouldStopProblemTimerOnAccepted() {
+    return getWorkspaceConfiguration().get("problemTimer.stopOnAccepted", true);
+}
+exports.shouldStopProblemTimerOnAccepted = shouldStopProblemTimerOnAccepted;
 //# sourceMappingURL=settingUtils.js.map

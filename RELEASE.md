@@ -9,10 +9,18 @@
 - Marketplace item: `https://marketplace.visualstudio.com/items?itemName=olsonwangyj.leetcode-on-vscode`
 - Current repo branch: `main`
 - Current tracked remote: `origin -> git@github.com:olsonwangyj/leetcode-on-vscode.git`
-- Current package version in repo: `1.0.2`
+- Current package version in repo: `1.0.6`
 - Installed local extension path pattern: `/Users/Zhuanz/.vscode/extensions/olsonwangyj.leetcode-on-vscode-*`
 - Current packaged VSIX files in repo:
-  - `leetcode-on-vscode-1.0.2.vsix`
+  - `leetcode-on-vscode-1.0.6.vsix`
+
+## Current release: 1.0.6
+
+- Adds an automatic LeetCode problem timer.
+- Renders the live solving time near `@lc code=start` as `Timer 00:00:00`.
+- Adds timer controls in the editor title, top CodeLens, status bar, context menu, and Command Palette.
+- Stops the timer on accepted submissions by default and reports the final solving time.
+- Updates Marketplace README content with timer, debug, screenshots, and GitHub upload setup.
 
 ## One-time setup
 
@@ -49,7 +57,7 @@ Keep these two files in sync:
 - `package.json`
 - `package-lock.json`
 
-Current version before the next release: `1.0.2`
+Current version before the next release: `1.0.6`
 
 ### 3. Check local changes
 
@@ -66,7 +74,7 @@ vsce package
 This creates a file like:
 
 ```bash
-leetcode-on-vscode-1.0.2.vsix
+leetcode-on-vscode-1.0.6.vsix
 ```
 
 For the next release, the filename should change with the new version number.
@@ -128,20 +136,32 @@ Use the helper scripts if you want a repeatable workflow:
 ./scripts/release.sh verify
 ```
 
+## README / Marketplace Details checklist
+
+Before publishing, check that `README.md` covers both user paths:
+
+- GUI flow: install, LeetCode Activity Bar, sign in, open a problem, test, debug, submit, upload to GitHub.
+- Command-line flow: `code --install-extension`, local `.vsix` install, package, verify, and publish.
+- Debug flow: Java breakpoint entry, testcase picker, `.debug.txt` reusable case format, JDK / Java Debugger setup.
+- Screenshots: `resources/screenshots/leetcode-workflow-annotated.png` and `resources/screenshots/vscode-debug-testcase-picker.png` are real VS Code captures and are included in `vsce ls --tree`.
+
 ## Current release-related files
 
 - `package.json`
 - `package-lock.json`
-- `out/src/shared.js`
-- `out/src/commands/show.js`
-- `out/src/utils/forkConfig.js`
-- `out/src/utils/problemWorkspaceLayout.js`
+- `README.md`
+- `resources/screenshots/leetcode-workflow-annotated.png`
+- `resources/screenshots/vscode-debug-testcase-picker.png`
+- `out/src/commands/debug.js`
+- `out/src/codelens/CustomCodeLensProvider.js`
 
 ## Known release-related fixes already in the project
 
 - Auth callback uses the new extension id: `olsonwangyj.leetcode-on-vscode`
 - Opening a problem auto-collapses the sidebar
 - Problem description is on the left and code on the right
+- Java debug runs in an isolated runtime so the current problem does not reuse another `Solution.class`
+- Marketplace Details now guides both GUI users and command-line users
 
 ## Current repo note
 

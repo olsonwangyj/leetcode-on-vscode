@@ -10,6 +10,10 @@ smoke/**
 resources/AlgoWorkspace-mono.svg
 resources/AlgoWorkspace.png
 resources/AlgoWorkspace.svg
+resources/screenshots/*.svg
+resources/screenshots/debug-editor-entry.png
+resources/screenshots/debug-case-picker.png
+resources/screenshots/vscode-java-editor.png
 out/**/*.map
 out/src/.env.local
 out/src/temp.js

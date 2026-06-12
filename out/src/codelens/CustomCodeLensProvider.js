@@ -4,6 +4,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.customCodeLensProvider = exports.CustomCodeLensProvider = void 0;
 const vscode = require("vscode");
+const timer_1 = require("../commands/timer");
 const explorerNodeManager_1 = require("../explorer/explorerNodeManager");
 const settingUtils_1 = require("../utils/settingUtils");
 class CustomCodeLensProvider {
@@ -39,8 +40,25 @@ class CustomCodeLensProvider {
                 break;
             }
         }
+        let topCodeLensLine = 0;
+        for (let i = 0; i < document.lineCount; i++) {
+            const lineContent = document.lineAt(i).text;
+            if (lineContent.indexOf("@lc code=start") >= 0) {
+                topCodeLensLine = i;
+                break;
+            }
+        }
         const range = new vscode.Range(codeLensLine, 0, codeLensLine, 0);
+        const topRange = new vscode.Range(topCodeLensLine, 0, topCodeLensLine, 0);
         const codeLens = [];
+        if (shortcuts.indexOf("timer") >= 0 && settingUtils_1.isProblemTimerEnabled()) {
+            const elapsed = timer_1.problemTimer.getElapsedText(document.uri.fsPath);
+            codeLens.push(new vscode.CodeLens(topRange, {
+                title: elapsed ? `Timer ${elapsed}` : "Start Timer",
+                command: "leetcode.showProblemTimer",
+                arguments: [document.uri],
+            }));
+        }
         if (shortcuts.indexOf("submit") >= 0) {
             codeLens.push(new vscode.CodeLens(range, {
                 title: "Submit",
